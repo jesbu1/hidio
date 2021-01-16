@@ -1,0 +1,4 @@
+include 'sac_goaltask.gin'
+include 'playground_kickball.gin'
+
+TrainerConfig.num_env_steps=5000000

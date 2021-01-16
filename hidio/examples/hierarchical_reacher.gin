@@ -1,0 +1,151 @@
+import alf.networks.preprocessors
+import alf.algorithms.sac_algorithm
+
+import alf.utils.dist_utils
+
+import hidio.algorithm.hierarchical_agent
+import hidio.utils
+import hidio.environments.suite_pets_envs
+import hidio.algorithm.skill_generator
+
+unroll_length=25
+# environment config
+horizon = 100
+suite_pets_envs.load.max_episode_steps = %horizon
+create_environment.env_name='Reacher'
+create_environment.env_load_fn=@suite_pets_envs.load
+create_environment.num_parallel_environments=20
+
+# skill related
+skill_dim=8
+skill_spec=@BoundedTensorSpec(shape=(%skill_dim,), minimum=-1, maximum=1)
+
+# algorithm config
+observation_spec=@get_observation_spec()
+action_spec=@get_action_spec()
+
+low_hidden_dim=128
+num_steps_per_skill=3
+target_update_period=1
+min_prob=0.2
+replay_buffer_length=200000
+learning_rate=1e-4
+
+low_rl_input_specs = @get_low_rl_input_spec(
+    observation_spec=%observation_spec,
+    action_spec=%action_spec,
+    num_steps_per_skill=%num_steps_per_skill,
+    skill_spec=%skill_spec)
+low_input_preprocessors = @get_low_rl_input_preprocessors(
+    low_rl_input_specs=%low_rl_input_specs,
+    embedding_dim=%low_hidden_dim)
+
+NormalProjectionNetwork.state_dependent_std=True
+NormalProjectionNetwork.scale_distribution=True
+NormalProjectionNetwork.std_transform=@clipped_exp
+
+OneStepTDLoss.gamma=1.0
+
+low/ActorDistributionNetwork.input_tensor_spec=%low_rl_input_specs
+low/ActorDistributionNetwork.input_preprocessors=%low_input_preprocessors
+low/ActorDistributionNetwork.preprocessing_combiner=@NestSum(activation=@torch.relu_)
+low/ActorDistributionNetwork.action_spec=%action_spec
+low/ActorDistributionNetwork.fc_layer_params=(%low_hidden_dim, %low_hidden_dim)
+low/ActorDistributionNetwork.continuous_projection_net_ctor=@NormalProjectionNetwork
+low/CriticNetwork.input_tensor_spec=(%low_rl_input_specs, %action_spec)
+low/CriticNetwork.observation_input_processors=%low_input_preprocessors
+low/CriticNetwork.observation_preprocessing_combiner=@NestSum(activation=@torch.relu_)
+low/CriticNetwork.joint_fc_layer_params=(%low_hidden_dim, %low_hidden_dim)
+
+low/calc_default_target_entropy.min_prob=%min_prob
+
+low/SacAlgorithm.actor_network_cls=@low/ActorDistributionNetwork
+low/SacAlgorithm.critic_network_cls=@low/CriticNetwork
+low/SacAlgorithm.target_update_tau=0.001
+low/SacAlgorithm.target_entropy=@low/calc_default_target_entropy
+low/SacAlgorithm.name="Lower_level_SAC"
+low/SacAlgorithm.use_parallel_network=True
+low/SacAlgorithm.target_update_period=%target_update_period
+low/OneStepTDLoss.gamma=1.0
+#low/OneStepTDLoss.gamma=@compute_discount_from_horizon(T=%num_steps_per_skill)
+low/SacAlgorithm.critic_loss_ctor=@low/OneStepTDLoss
+
+low/SacAlgorithm.initial_log_alpha=-4.6 # log(0.1)=-2.3; log(0.01)=-4.6; log(1e-3)=-6.9
+low/SacAlgorithm.alpha_optimizer=@AdamTF(lr=0) # fixed alpha
+
+low/AdamTF.lr=%learning_rate
+
+HierarchicalAgent.rl_algorithm_cls=@low/SacAlgorithm
+HierarchicalAgent.skill_generator_cls=@SkillGenerator
+HierarchicalAgent.skill_spec=%skill_spec
+HierarchicalAgent.optimizer=@low/AdamTF()
+#HierarchicalAgent.skill_boundary_discount=1.
+HierarchicalAgent.skill_boundary_discount=0.
+HierarchicalAgent.exp_reward_relabeling=True
+
+hidden_layers=(256, 256, 256)
+high/ActorDistributionNetwork.input_tensor_spec=%observation_spec
+high/ActorDistributionNetwork.action_spec=%skill_spec
+high/ActorDistributionNetwork.fc_layer_params=%hidden_layers
+high/ActorDistributionNetwork.continuous_projection_net_ctor=@NormalProjectionNetwork
+high/CriticNetwork.input_tensor_spec=(%observation_spec, %skill_spec)
+high/CriticNetwork.joint_fc_layer_params=%hidden_layers
+
+high/calc_default_target_entropy.min_prob=%min_prob
+
+high/SacAlgorithm.actor_network_cls=@high/ActorDistributionNetwork
+high/SacAlgorithm.critic_network_cls=@high/CriticNetwork
+high/SacAlgorithm.target_update_tau=0.001
+high/SacAlgorithm.target_entropy=@high/calc_default_target_entropy
+high/SacAlgorithm.name="Higher_level_SAC"
+high/AdamTF.lr=%learning_rate
+high/SacAlgorithm.actor_optimizer=@high/AdamTF()
+high/SacAlgorithm.critic_optimizer=@high/AdamTF()
+high/SacAlgorithm.alpha_optimizer=@high/AdamTF()
+high/SacAlgorithm.use_parallel_network=True
+high/SacAlgorithm.target_update_period=%target_update_period
+
+mini_batch_size=2048
+
+SkillGenerator.num_steps_per_skill=%num_steps_per_skill
+SkillGenerator.rl_algorithm_cls=@high/SacAlgorithm
+SkillGenerator.rl_mini_batch_size=%mini_batch_size
+SkillGenerator.rl_mini_batch_length=2
+SkillGenerator.rl_replay_buffer_length=%replay_buffer_length
+SkillGenerator.disc_mini_batch_size=%mini_batch_size
+SkillGenerator.disc_mini_batch_length=1
+SkillGenerator.disc_replay_buffer_length=%replay_buffer_length
+# It will calculate the correct discounts and reward_per_step for high-level rl,
+# so that the rl is optimized as if in the original non-hierarchical case with
+# gamma=0.98. (OneStepTDLoss.gamma should be set to 1.0).
+SkillGenerator.gamma=@compute_discount_from_horizon(T=%horizon)
+
+disc/EncodingNetwork.fc_layer_params=(64, 64)
+disc/EncodingNetwork.last_activation=@torch.tanh
+
+Discriminator.optimizer=@AdamTF(lr=%learning_rate)
+Discriminator.skill_discriminator_ctor=@disc/EncodingNetwork
+Discriminator.skill_type="state_action"
+
+# training config
+TrainerConfig.temporally_independent_train_step=True
+TrainerConfig.initial_collect_steps=10000
+TrainerConfig.mini_batch_length=2
+TrainerConfig.mini_batch_size=%mini_batch_size
+TrainerConfig.unroll_length=%unroll_length
+TrainerConfig.num_updates_per_train_iter=100
+TrainerConfig.whole_replay_buffer_training=False
+TrainerConfig.clear_replay_buffer=False
+TrainerConfig.algorithm_ctor=@HierarchicalAgent
+TrainerConfig.num_iterations=0
+TrainerConfig.num_env_steps=3000000
+TrainerConfig.num_checkpoints=5
+TrainerConfig.evaluate=1
+TrainerConfig.num_eval_episodes=50
+TrainerConfig.eval_interval=100
+TrainerConfig.debug_summaries=True
+TrainerConfig.summarize_grads_and_vars=0
+TrainerConfig.summary_interval=20
+TrainerConfig.use_rollout_state=True
+TrainerConfig.replay_buffer_length=%replay_buffer_length
+TrainerConfig.priority_replay_alpha=1.0

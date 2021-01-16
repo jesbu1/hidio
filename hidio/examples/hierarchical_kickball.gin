@@ -1,0 +1,6 @@
+include "hierarchical_goaltask.gin"
+include "playground_kickball.gin"
+
+num_steps_per_skill=3
+TrainerConfig.num_env_steps=5000000
+Discriminator.skill_type="state_difference"

@@ -1,0 +1,26 @@
+import alf.environments.suite_socialbot
+import hidio.environments.success_wrapper 
+
+# environment config
+# observation_spec=BoundedTensorSpec(shape=(18,), dtype=torch.float32, minimum=array(-inf, dtype=float32), maximum=array(inf, dtype=float32))
+# action_spec=BoundedTensorSpec(shape=(2,), dtype=torch.float32, minimum=array(-1., dtype=float32), maximum=array(1., dtype=float32))
+create_environment.env_name="SocialBot-PlayGround-v0"
+create_environment.num_parallel_environments=10
+create_environment.env_load_fn=@suite_socialbot.load
+MAX_EPISODE_STEPS=100
+suite_socialbot.load.max_episode_steps=%MAX_EPISODE_STEPS
+SuccessWrapper.since_episode_steps=0 # because of early termination
+suite_socialbot.load.gym_env_wrappers=(@SuccessWrapper,)
+
+PlayGround.agent_type='pioneer2dx_noplugin'
+PlayGround.tasks=[@GoalTask]
+PlayGround.action_cost=0.01
+# 10Hz control freq
+PlayGround.step_time=0.1
+PlayGround.max_steps=1000000 # a big number to make sure the TimeLimit wrapper ends the game
+GoalTask.sparse_reward=True
+GoalTask.success_with_angle_requirement=True
+GoalTask.use_egocentric_states=True
+GoalTask.move_goal_during_episode=False
+GoalTask.end_episode_after_success=True
+GoalTask.random_range=8.0

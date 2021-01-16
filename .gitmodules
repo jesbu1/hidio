@@ -1,0 +1,6 @@
+[submodule "alf"]
+	path = alf
+	url = git@github.com:HorizonRobotics/alf.git
+[submodule "SocialRobot"]
+	path = SocialRobot
+	url = git@github.com:jesbu1/SocialRobot.git

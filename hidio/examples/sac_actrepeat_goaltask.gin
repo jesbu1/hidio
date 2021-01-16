@@ -1,0 +1,11 @@
+include 'sac_goaltask.gin'
+
+import alf.environments.gym_wrappers
+
+suite_socialbot.load.max_episode_steps=34# total steps=3*34 =102
+suite_socialbot.load.gym_env_wrappers=(@FrameSkip, @SuccessWrapper)
+FrameSkip.skip=3
+
+TrainerConfig.initial_collect_steps=3333 # 10000 / 3
+TrainerConfig.num_env_steps=1666667 # 5M / 3
+TrainerConfig.unroll_length=33 # 200 / (3 * 2)

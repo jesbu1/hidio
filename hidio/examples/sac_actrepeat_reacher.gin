@@ -1,0 +1,14 @@
+include 'sac_reacher.gin'
+
+import alf.environments.gym_wrappers
+
+suite_pets_envs.load.max_episode_steps=34 # total steps=3*34=101
+SuccessWrapper.since_episode_steps=34
+suite_pets_envs.load.use_success_wrapper=False
+suite_pets_envs.load.gym_env_wrappers=(@FrameSkip, @SuccessWrapper)
+FrameSkip.skip=3
+
+TrainerConfig.initial_collect_steps=3333 # 10000 / 3
+TrainerConfig.num_env_steps=1000000 # 3M / 3
+TrainerConfig.unroll_length=4 # 100 / (3 * 8)
+TrainerConfig.eval_interval=200

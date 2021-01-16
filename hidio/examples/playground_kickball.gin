@@ -1,0 +1,9 @@
+include 'playground_goaltask.gin'
+MAX_EPISODE_STEPS=200
+
+# environment config
+PlayGround.tasks=[@KickingBallTask]
+PlayGround.action_cost=0.01
+
+KickingBallTask.random_range=2.0
+KickingBallTask.sparse_reward=True
