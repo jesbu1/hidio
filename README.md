@@ -1,5 +1,5 @@
 # Hierarchical Reinforcement Learning by Discovering Intrinsic Options (HIDIO)
-![](./images/hidio_picture.png) 
+![](./hidio/images/hidio.png) 
 
 This is the repository for our work, [Hierarchical Reinforcement Learning by Discovering Intrinsic Options (HIDIO)](), appearing in ICLR 2021. HIDIO is a  hierarchical RL algorithm which discovers short-horizon options in a self-supervised manner while jointly learning to utilize them to solve *sparse-reward* manipulation and navigation tasks. See our paper for more details.  TODO: Fill in link.
 
@@ -13,11 +13,11 @@ Our code imports an unmodified commit from the [Agent Learning Framework (ALF)](
 
 ## Installation
 This repo was developed with Python 3.6.
-You can run the following commands to install the modified ALF repo.
+You can run the following commands to install the hidio repo and its ALF dependency.
 ```
 git clone --recursive https://github.com/jesbu1/hidio
-cd hidio/alf
-pip install -e . 
+cd hidio
+pip install -e alf .
 ```
 
 In order to run on the SocialRobot environments (GoalTask/KickBall), you must 
