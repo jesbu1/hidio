@@ -13,17 +13,16 @@ Our code imports an unmodified commit from the [Agent Learning Framework (ALF)](
 
 ## Installation
 This repo was developed with Python 3.6.
-You can run the following commands to install the hidio repo and its ALF dependency. It's important to `pip install -e .` before `pip install -e alf`.
+You can run the following commands to install the hidio repo and its ALF dependency. 
 ```
-git clone --recursive https://github.com/jesbu1/hidio
+git clone https://github.com/jesbu1/hidio
 cd hidio
 pip install -e .
-pip install -e alf
 ```
 
 In order to run on the SocialRobot environments (GoalTask/KickBall), you must 
 have SocialRobot installed. If you want to test out these environments, follow
-the steps listed in the [SocialRobot](https://github.com/jesbu1/SocialRobot/tree/distractor_kickball) repo included as a submodule in this repo.
+the steps listed in [this specific branch of our SocialRobot repo](https://github.com/jesbu1/SocialRobot/tree/distractor_kickball).
 
 In order to run the Pusher/Reacher environments, you must have MuJoco 200 installed with an appropriate MuJuco license linked.
 See here to download and setup MuJoco 200: [mujoco](https://www.roboti.us/index.html). On Ubuntu, we had to install some extra packages first: `sudo apt install -y libosmesa6-dev libgl1-mesa-glx libglfw3 patchelf`. Then, run
@@ -75,7 +74,7 @@ python -m alf.bin.play --root_dir=LOG_DIR
 ## Adding a New Environment/Testing on Other Environments
 To add a standard gym environment, you can just take one of the existing `.gin` files in `hidio/examples` as an example and replace the environment name with the new gym environment name.
 
-To add a non-standard environment, you will need to write an environment wrapper for it in `hidio/environments`. Many wrappers from ALF can be used (`alf/environments`), however if none of them fit your environment, you can put required files as a subdirectory in `hidio/environments` and write a wrapper `.py` file like `suite_pets_envs.py` in `hidio/environments`, two wrapper files we used for the Pusher/Reacher and SocialRobot environments, respectively. Then, write a `.gin` file that includes this wrapper as an import, see `playground_navigation.gin` or `hierarchical_pusher.gin` as an example.
+To add a non-standard environment, you will need to write an environment wrapper for it in `hidio/environments`. Many wrappers from ALF can be used (`alf/environments`, make sure to use the specific commit [here](https://github.com/HorizonRobotics/alf/tree/1146c4c78aef06a958c1f0c1d83be6645b11cc31) from ALF for compatability), however if none of them fit your environment, you can put required files as a subdirectory in `hidio/environments` and write a wrapper `.py` file like `suite_pets_envs.py` in `hidio/environments`, two wrapper files we used for the Pusher/Reacher and SocialRobot environments, respectively. Then, write a `.gin` file that includes this wrapper as an import, see `playground_navigation.gin` or `hierarchical_pusher.gin` as an example.
 
 ## Cite our work
 ```
