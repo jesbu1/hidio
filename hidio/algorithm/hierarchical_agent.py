@@ -16,7 +16,6 @@
 import gin
 
 import torch
-from torch import nn
 
 import alf
 from alf.algorithms.sac_algorithm import SacAlgorithm
@@ -179,8 +178,6 @@ class HierarchicalAgent(OnPolicyAlgorithm):
 
         The same applies to action except that there is no ``first_observation``.
         """
-        #print("steps:", steps)
-
         subtrajectory.observation[torch.arange(updated_first_observation.
                                                shape[0]).long(), steps -
                                   1] = updated_first_observation
@@ -202,11 +199,8 @@ class HierarchicalAgent(OnPolicyAlgorithm):
         subtrajectory = alf.nest.map_structure(
             lambda traj: traj.reshape(traj.shape[0], -1), subtrajectory)
 
-        #print("switch_skill:", switch_skill)
-
         low_rl_observation = (alf.nest.flatten(subtrajectory) +
                               [self._num_steps_per_skill - steps, skill])
-        #print("low_rl_observation:", low_rl_observation)
         return low_rl_observation
 
     def predict_step(self, time_step: TimeStep, state: AgentState,
@@ -252,7 +246,6 @@ class HierarchicalAgent(OnPolicyAlgorithm):
         new_state = new_state._replace(skill_generator=skill_step.state)
         info = info._replace(skill_generator=skill_step.info)
 
-        #print("step_type:", time_step.step_type)
         observation = self._make_low_level_observation(
             subtrajectory, skill_step.output, skill_step.info.switch_skill,
             skill_step.state.steps,
