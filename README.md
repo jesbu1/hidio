@@ -13,12 +13,12 @@ Our code imports an unmodified commit from the [Agent Learning Framework (ALF)](
 
 ## Installation
 This repo was developed with Python 3.6.
-You can run the following commands to install the hidio repo and its ALF dependency.
+You can run the following commands to install the hidio repo and its ALF dependency. It's important to `pip install -e .` before `pip install -e alf`.
 ```
 git clone --recursive https://github.com/jesbu1/hidio
 cd hidio
-pip install -e alf
 pip install -e .
+pip install -e alf
 ```
 
 In order to run on the SocialRobot environments (GoalTask/KickBall), you must 
