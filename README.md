@@ -3,7 +3,7 @@
 
 This is the repository for our work, [Hierarchical Reinforcement Learning by Discovering Intrinsic Options (HIDIO)](), appearing in ICLR 2021. HIDIO is a  hierarchical RL algorithm which discovers short-horizon options in a self-supervised manner while jointly learning to utilize them to solve *sparse-reward* manipulation and navigation tasks. See our paper for more details.  TODO: Fill in link.
 
-Our code imports an unmodified commit from the [Agent Learning Framework (ALF)](https://github.com/HorizonRobotics/alf/) developed by [Horizon Robotics](https://en.horizon.ai/), which includes parallelized PyTorch implementations of a wide variety of common reinforcement learning algorithms.
+Our code imports the [Agent Learning Framework (ALF)](https://github.com/HorizonRobotics/alf/) developed by [Horizon Robotics](https://en.horizon.ai/), which includes parallelized PyTorch implementations of a wide variety of common reinforcement learning algorithms.
 
 ## Example HIDIO Behavior
 ![Pusher](./hidio/images/pusher.gif)
