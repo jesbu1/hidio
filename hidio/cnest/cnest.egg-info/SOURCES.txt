@@ -1,6 +1,0 @@
-setup.py
-./nest.cpp
-cnest.egg-info/PKG-INFO
-cnest.egg-info/SOURCES.txt
-cnest.egg-info/dependency_links.txt
-cnest.egg-info/top_level.txt
