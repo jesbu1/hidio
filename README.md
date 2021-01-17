@@ -15,9 +15,10 @@ Our code imports the [Agent Learning Framework (ALF)](https://github.com/Horizon
 This repo was developed with Python 3.6.
 You can run the following commands to install the hidio repo and its ALF dependency. 
 ```
-git clone https://github.com/jesbu1/hidio
+git clone --recursive https://github.com/jesbu1/hidio
 cd hidio
 pip install -e .
+pip install -e alf
 ```
 
 In order to run on the SocialRobot environments (GoalTask/KickBall), you must 
