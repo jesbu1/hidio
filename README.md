@@ -74,7 +74,7 @@ python -m alf.bin.play --root_dir=LOG_DIR
 ## Adding a New Environment/Testing on Other Environments
 To add a standard gym environment, you can just take one of the existing `.gin` files in `hidio/examples` as an example and replace the environment name with the new gym environment name.
 
-To add a non-standard environment, you will need to write an environment wrapper for it in `hidio/environments`. Many wrappers from ALF can be used (`alf/environments`, make sure to use the specific commit [here](https://github.com/HorizonRobotics/alf/tree/1146c4c78aef06a958c1f0c1d83be6645b11cc31) from ALF for compatability), however if none of them fit your environment, you can put required files as a subdirectory in `hidio/environments` and write a wrapper `.py` file like `suite_pets_envs.py` in `hidio/environments`, two wrapper files we used for the Pusher/Reacher and SocialRobot environments, respectively. Then, write a `.gin` file that includes this wrapper as an import, see `playground_navigation.gin` or `hierarchical_pusher.gin` as an example.
+To add a non-standard environment, you will need to write an environment wrapper for it in `hidio/environments`. Many wrappers from ALF can be used (`alf/environments`), however if none of them fit your environment, you can put required files as a subdirectory in `hidio/environments` and write a wrapper `.py` file like `suite_pets_envs.py` in `hidio/environments`, two wrapper files we used for the Pusher/Reacher and SocialRobot environments, respectively. Then, write a `.gin` file that includes this wrapper as an import, see `playground_navigation.gin` or `hierarchical_pusher.gin` as an example.
 
 ## Cite our work
 ```
