@@ -142,3 +142,4 @@ TrainerConfig.summary_interval=20
 TrainerConfig.use_rollout_state=True
 TrainerConfig.replay_buffer_length=%replay_buffer_length
 TrainerConfig.priority_replay_alpha=1.0
+TrainerConfig.epsilon_greedy=0.
