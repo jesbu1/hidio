@@ -17,7 +17,8 @@ You can run the following commands to install the hidio repo and its ALF depende
 ```
 git clone --recursive https://github.com/jesbu1/hidio
 cd hidio
-pip install -e . -e alf
+pip install -e .
+pip install -e alf
 ```
 
 In order to run on the SocialRobot environments (GoalTask/KickBall), you must
