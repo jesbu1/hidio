@@ -56,8 +56,8 @@ low/CriticNetwork.joint_fc_layer_params=(%low_hidden_dim, %low_hidden_dim)
 
 calc_default_target_entropy.min_prob=%min_prob
 
-low/SacAlgorithm.actor_network_cls=@low/ActorDistributionNetwork
-low/SacAlgorithm.critic_network_cls=@low/CriticNetwork
+low/SacAlgorithm.actor_network=@low/ActorDistributionNetwork()
+low/SacAlgorithm.critic_network=@low/CriticNetwork()
 low/SacAlgorithm.target_update_tau=0.05
 low/SacAlgorithm.target_entropy=@calc_default_target_entropy
 low/SacAlgorithm.name="Lower_level_SAC"
@@ -86,8 +86,8 @@ high/ActorDistributionNetwork.continuous_projection_net_ctor=@NormalProjectionNe
 high/CriticNetwork.input_tensor_spec=(%observation_spec, %skill_spec)
 high/CriticNetwork.joint_fc_layer_params=%hidden_layers
 
-high/SacAlgorithm.actor_network_cls=@high/ActorDistributionNetwork
-high/SacAlgorithm.critic_network_cls=@high/CriticNetwork
+high/SacAlgorithm.actor_network=@high/ActorDistributionNetwork()
+high/SacAlgorithm.critic_network=@high/CriticNetwork()
 high/SacAlgorithm.target_update_tau=0.05
 high/SacAlgorithm.target_entropy=@calc_default_target_entropy
 high/SacAlgorithm.name="Higher_level_SAC"
@@ -142,3 +142,4 @@ TrainerConfig.summary_interval=20
 TrainerConfig.use_rollout_state=True
 TrainerConfig.replay_buffer_length=%replay_buffer_length
 TrainerConfig.priority_replay_alpha=1.0
+TrainerConfig.epsilon_greedy=0.

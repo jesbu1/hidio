@@ -48,7 +48,7 @@ cd hidio/examples
 python -m alf.bin.train --gin_file hierarchical_[goaltask/kickball].gin --root_dir=LOG_DIR
 ```
 
-By default, Pusher/Reacher/GoalTask will use the `StateAction` instantiation of HIDIO, while KickBall will use the `StateDiff` instantiation. To change these, modify the `Discriminator.skill_type` flag to be the HIDIO instantiation you'd like to test out (options: `state_action/state_difference/action/state/state_concatenation/action_concatenation`).
+By default, all environment gin files will use the `StateAction` instantiation of HIDIO. To change these, modify the `Discriminator.skill_type` flag to be the HIDIO instantiation you'd like to test out (options: `state_action/state_difference/action/state/state_concatenation/action_concatenation`).
 
 #### SAC/SAC with Action Repetition
 
