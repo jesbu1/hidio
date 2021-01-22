@@ -1,7 +1,7 @@
 # Hierarchical Reinforcement Learning by Discovering Intrinsic Options (HIDIO)
-![](./hidio/images/hidio.png) 
+![](./hidio/images/hidio.png)
 
-This is the repository for our work, [Hierarchical Reinforcement Learning by Discovering Intrinsic Options (HIDIO)](), appearing in ICLR 2021. HIDIO is a  hierarchical RL algorithm which discovers short-horizon options in a self-supervised manner while jointly learning to utilize them to solve *sparse-reward* manipulation and navigation tasks. See our paper for more details.  TODO: Fill in link.
+This is the repository for our work, [Hierarchical Reinforcement Learning by Discovering Intrinsic Options (HIDIO)](https://openreview.net/forum?id=r-gPPHEjpmw), appearing in ICLR 2021. HIDIO is a  hierarchical RL algorithm which discovers short-horizon options in a self-supervised manner while jointly learning to utilize them to solve *sparse-reward* manipulation and navigation tasks. See our paper for more details.
 
 Our code imports the [Agent Learning Framework (ALF)](https://github.com/HorizonRobotics/alf/) developed by [Horizon Robotics](https://en.horizon.ai/), which includes parallelized PyTorch implementations of a wide variety of common reinforcement learning algorithms.
 
@@ -13,15 +13,14 @@ Our code imports the [Agent Learning Framework (ALF)](https://github.com/Horizon
 
 ## Installation
 This repo was developed with Python 3.6.
-You can run the following commands to install the hidio repo and its ALF dependency. 
+You can run the following commands to install the hidio repo and its ALF dependency.
 ```
 git clone --recursive https://github.com/jesbu1/hidio
 cd hidio
-pip install -e .
-pip install -e alf
+pip install -e . -e alf
 ```
 
-In order to run on the SocialRobot environments (GoalTask/KickBall), you must 
+In order to run on the SocialRobot environments (GoalTask/KickBall), you must
 have SocialRobot installed. If you want to test out these environments, follow
 the steps listed in [this specific branch of our SocialRobot repo](https://github.com/jesbu1/SocialRobot/tree/distractor_kickball).
 
@@ -49,7 +48,7 @@ cd hidio/examples
 python -m alf.bin.train --gin_file hierarchical_[goaltask/kickball].gin --root_dir=LOG_DIR
 ```
 
-By default, Pusher/Reacher/GoalTask will use the `StateAction` instantiation of HIDIO, while KickBall will use the `StateDiff` instantiation. To change these, modify the `Discriminator.skill_type` flag to be the HIDIO instantiation you'd like to test out (options: `state_action/state_difference/action/state/state_concatenation/action_concatenation`).
+By default, all environment gin files will use the `StateAction` instantiation of HIDIO. To change these, modify the `Discriminator.skill_type` flag to be the HIDIO instantiation you'd like to test out (options: `state_action/state_difference/action/state/state_concatenation/action_concatenation`).
 
 #### SAC/SAC with Action Repetition
 
@@ -70,14 +69,20 @@ python -m alf.bin.play --root_dir=LOG_DIR
 
 `hidio/environments` contains wrappers for the evaluated Gym environments.
 
-`hidio/examples` contains `.gin` files used by ALF to train the various implemented algorithms. These `.gin` files specify the environment, algorithm, environment wrappers, and algorithm hyperparameters. 
+`hidio/examples` contains `.gin` files used by ALF to train the various implemented algorithms. These `.gin` files specify the environment, algorithm, environment wrappers, and algorithm hyperparameters.
 
 ## Adding a New Environment/Testing on Other Environments
 To add a standard gym environment, you can just take one of the existing `.gin` files in `hidio/examples` as an example and replace the environment name with the new gym environment name.
 
-To add a non-standard environment, you will need to write an environment wrapper for it in `hidio/environments`. Many wrappers from ALF can be used (`alf/environments`, make sure to use the specific commit [here](https://github.com/HorizonRobotics/alf/tree/1146c4c78aef06a958c1f0c1d83be6645b11cc31) from ALF for compatability), however if none of them fit your environment, you can put required files as a subdirectory in `hidio/environments` and write a wrapper `.py` file like `suite_pets_envs.py` in `hidio/environments`, two wrapper files we used for the Pusher/Reacher and SocialRobot environments, respectively. Then, write a `.gin` file that includes this wrapper as an import, see `playground_navigation.gin` or `hierarchical_pusher.gin` as an example.
+To add a non-standard environment, you will need to write an environment wrapper for it in `hidio/environments`. Many wrappers from ALF can be used (`alf/environments`), however if none of them fit your environment, you can put required files as a subdirectory in `hidio/environments` and write a wrapper `.py` file like `suite_pets_envs.py` in `hidio/environments`, two wrapper files we used for the Pusher/Reacher and SocialRobot environments, respectively. Then, write a `.gin` file that includes this wrapper as an import, see `playground_navigation.gin` or `hierarchical_pusher.gin` as an example.
 
 ## Cite our work
 ```
-TODO: Add citation
+@inproceedings{zhang2021hierarchical,
+    title={Hierarchical Reinforcement Learning by Discovering Intrinsic Options},
+    author={Jesse Zhang and Haonan Yu and Wei Xu},
+    booktitle={International Conference on Learning Representations},
+    year={2021},
+    url={https://openreview.net/forum?id=r-gPPHEjpmw}
+}
 ```
