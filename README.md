@@ -23,6 +23,10 @@ pip install -e . -e alf
 In order to run on the SocialRobot environments (GoalTask/KickBall), you must
 have SocialRobot installed. If you want to test out these environments, follow
 the steps listed in [this specific branch of our SocialRobot repo](https://github.com/jesbu1/SocialRobot/tree/distractor_kickball).
+Clone it as such:
+```
+git clone https://github.com/jesbu1/SocialRobot.git
+```
 
 In order to run the Pusher/Reacher environments, you must have MuJoco 200 installed with an appropriate MuJuco license linked.
 See here to download and setup MuJoco 200: [mujoco](https://www.roboti.us/index.html). On Ubuntu, we had to install some extra packages first: `sudo apt install -y libosmesa6-dev libgl1-mesa-glx libglfw3 patchelf`. Then, run
