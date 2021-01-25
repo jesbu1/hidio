@@ -23,7 +23,7 @@ pip install -e . -e alf
 In order to run on the SocialRobot environments (GoalTask/KickBall), you must
 have SocialRobot installed. If you want to test out these environments, follow
 the steps listed in [this specific branch of our SocialRobot repo](https://github.com/jesbu1/SocialRobot/tree/distractor_kickball).
-Clone it as such:
+Clone it as such, and make sure to be on the `distractor_kickball` branch:
 ```
 git clone https://github.com/jesbu1/SocialRobot.git
 ```
