@@ -16,6 +16,7 @@ import gin
 import torch
 import copy
 import numpy as np
+from hidio.utils import flatten
 
 import alf
 from alf.algorithms.algorithm import Algorithm
@@ -120,11 +121,9 @@ class Discriminator(Algorithm):
             num_steps_per_skill, observation_spec, action_spec)
 
         if skill_type == "state_concatenation":
-            discriminator_spec = common.flattened_spec(
-                subtrajectory_spec.observation)
+            discriminator_spec = flatten(subtrajectory_spec.observation)
         elif skill_type == "action_concatenation":
-            discriminator_spec = common.flattened_spec(
-                subtrajectory_spec.prev_action)
+            discriminator_spec = flatten(subtrajectory_spec.prev_action)
         else:
             discriminator_spec = get_discriminator_spec(
                 skill_type, observation_spec, action_spec)

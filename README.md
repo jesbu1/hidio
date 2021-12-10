@@ -12,7 +12,7 @@ Our code imports the [Agent Learning Framework (ALF)](https://github.com/Horizon
 ![KickBall](./hidio/images/kickball.gif)
 
 ## Installation
-This repo was developed with Python 3.6.
+This repo was developed with Python 3.7.
 You can run the following commands to install the hidio repo and its ALF dependency.
 ```
 git clone --recursive https://github.com/jesbu1/hidio

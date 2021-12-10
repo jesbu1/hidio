@@ -1,4 +1,6 @@
 import gin
+import numpy as np
+from alf.tensor_specs import TensorSpec
 @gin.configurable
 def compute_discount_from_horizon(T, num_episodes=1):
     r"""For an MDP with an infinite horizon and a time limit :math:`T` for each
@@ -14,3 +16,11 @@ def compute_discount_from_horizon(T, num_episodes=1):
         float: the discount factor :math:`\gamma` of the MDP
     """
     return 1 - 1 / float(T * num_episodes)
+
+def numel(spec):
+	"""Returns the number of elements in TensorSpec"""
+	return int(np.prod(spec.shape))
+
+def flatten(spec):
+    """Create a new TensorSpec so that the shape is flattened."""
+    return TensorSpec(shape=(numel(spec), ), dtype=spec.dtype)
